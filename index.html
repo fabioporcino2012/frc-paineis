@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Rental Car — Painéis</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#080e1a;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}
+.tabbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:6px;background:#0b1220;border-bottom:1px solid #1e293b;padding:10px 14px;align-items:center}
+.brand{color:#f97316;font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;margin-right:10px}
+.tab{background:#111b2d;color:#94a3b8;border:1px solid #1e293b;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab:hover{color:#e2e8f0;border-color:#334155}
+.tab.active{background:#f97316;color:#fff;border-color:#f97316}
+iframe{width:100%;border:0;display:block;background:#080e1a}
+iframe.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="tabbar"><span class="brand">FRC • Painéis</span>
+<button class="tab active" data-i="0">1 · Eficiência Operacional</button>
+<button class="tab" data-i="1">1B · SLA & Speed to Lead</button>
+<button class="tab" data-i="2">2 · Canais & CAC</button>
+<button class="tab" data-i="3">3 · Funil, Pace & Forecast</button>
+</div>
+<iframe id="f0" class=""></iframe>
+<iframe id="f1" class="hidden"></iframe>
+<iframe id="f2" class="hidden"></iframe>
+<iframe id="f3" class="hidden"></iframe>
+<script type="text/html" id="src0">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florida Rental Car - Inside Sales & SLA</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080e1a',
+                        cardBg: '#111b2d',
+                        floridaOrange: '#f97316', // Laranja Sol da Flórida
+                        floridaBlue: '#0284c7', // Azul Miami
+                        accentGreen: '#10b981',
+                        accentRed: '#ef4444'
+                    }
+                }
+            }
+        }
+    <\/script>
+    <style>
+        .smooth-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glow-orange:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(249, 115, 22, 0.4);
+            border-color: rgba(249, 115, 22, 0.5);
+            background-color: #1a1f33;
+        }
+        .glow-blue:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(2, 132, 199, 0.4);
+            border-color: rgba(2, 132, 199, 0.5);
+            background-color: #12233f;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6">
+
+    <!-- Header Principal -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8 pb-6 border-b border-slate-800">
+        <div>
+            <span class="text-xs font-bold text-floridaOrange uppercase tracking-widest bg-orange-500/10 px-3 py-1 rounded-full">Florida Rental Car • Performance de Vendas</span>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight mt-2">1. Eficiência Operacional e Produtividade</h1>
+            <p class="text-sm text-slate-400">Controle de esforço diário, velocidade de resposta (WhatsApp) e qualidade de abordagem de clientes.</p>
+        </div>
+        
+        <!-- Filtros Táticos -->
+        <div class="flex flex-wrap gap-3">
+            <div class="flex items-center gap-2 bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-2.5 transition-all">
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Período</span>
+                <input type="date" id="dataInicio" class="bg-transparent text-sm text-slate-300 focus:outline-none cursor-pointer [color-scheme:dark]">
+                <span class="text-slate-500 text-sm">até</span>
+                <input type="date" id="dataFim" class="bg-transparent text-sm text-slate-300 focus:outline-none cursor-pointer [color-scheme:dark]">
+            </div>
+            <select id="filtroCategoria" class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-floridaOrange cursor-pointer transition-all">
+                <option value="" selected>Todas as Categorias</option>
+                <option value="11">Econômico 5L</option>
+                <option value="44">Compacto Plus 7</option>
+                <option value="14">SUV 5L</option>
+                <option value="35">SUV Premium 7L</option>
+                <option value="16">SUV Premium 8L</option>
+                <option value="41">SUV Elite 7L</option>
+                <option value="33">SUV Elite 8L</option>
+                <option value="15">SUV Luxo</option>
+                <option value="13">Minivan 7L</option>
+                <option value="24">Minivan 8L</option>
+                <option value="17">Van 12L</option>
+                <option value="43">Caminhonete</option>
+                <option value="40">Mustang</option>
+                <option value="53">Mustang Elétrico</option>
+                <option value="38">Cadillac Escalade</option>
+                <option value="21">Tesla Model 3</option>
+                <option value="46">Tesla Model Y</option>
+                <option value="48">Tesla Cybertruck</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- GRID PRINCIPAL -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- LADO ESQUERDO: PRODUTIVIDADE (LEADING INDICATORS) -->
+        <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-floridaOrange rounded-full"></span>
+                    Produtividade do Time (Volume)
+                </h2>
+                <span class="text-xs text-floridaOrange bg-orange-500/10 px-2.5 py-1 rounded-full font-semibold">Atividades</span>
+            </div>
+
+            <!-- KPIs de Atividades -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="smooth-card glow-orange bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Cotações feitas</p>
+                    <p id="kpiCotacoesValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiCotacoesVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-orange bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Leads entrou</p>
+                    <p id="kpiComercialValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiComercialVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-orange bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Saldo cadência</p>
+                    <p id="kpiFluxoValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiFluxoVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-orange bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Reservas realizadas</p>
+                    <p id="kpiConfirmadasValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiConfirmadasVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+            </div>
+
+            <!-- Gráfico: Atividades Diárias -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-5">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Volume Diário — Cotações · Leads · Reservas · Saldo Cadência</h3>
+                <div class="h-56">
+                    <canvas id="chartAtividades"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabela de Conversão por Canal de Entrada -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-5">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Eficiência de Abordagem e Engajamento</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400">
+                                <th class="pb-2">Vendedor</th>
+                                <th class="pb-2 text-center">Leads</th>
+                                <th class="pb-2 text-center">Cotações (Engajamento)</th>
+                                <th class="pb-2 text-right">Vendas Realizadas (Conversão)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaVendedoresBody" class="divide-y divide-slate-800/40">
+                            <tr><td colspan="4" class="py-3 text-center text-slate-500">carregando…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- LADO DIREITO: SLA, SPEED TO LEAD & ADICIONAIS -->
+        <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-floridaBlue rounded-full"></span>
+                    SLA & Speed to Lead
+                </h2>
+                <span class="text-xs text-floridaBlue bg-sky-500/10 px-2.5 py-1 rounded-full font-semibold">Tempo de Resposta</span>
+            </div>
+
+            <!-- KPIs de SLA e Adicionais -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Tempo de Resposta</p>
+                    <p id="kpiSpeedValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiSpeedVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">% Atendimento &lt; 5 min</p>
+                    <p id="kpiSlaValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiSlaVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Ciclo Tempo até Fechamento</p>
+                    <p id="kpiCicloValor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiCicloVar" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+                <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-xl p-4 cursor-pointer">
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">% Vendas Clientes Ciclo 7 dias</p>
+                    <p id="kpiCiclo7Valor" class="text-2xl font-black text-white mt-1">…</p>
+                    <span id="kpiCiclo7Var" class="text-[10px] text-slate-400 font-bold bg-slate-500/10 px-1.5 py-0.5 rounded mt-2 inline-block">carregando…</span>
+                </div>
+            </div>
+
+            <!-- Gráfico: SLA por Canal -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-5">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Horário de Pico das Vendas (pagamentos confirmados · BRT)</h3>
+                <div class="h-56">
+                    <canvas id="chartSlaHorario"></canvas>
+                </div>
+            </div>
+
+            <!-- Painel de Sinais — 5 análises IA sobre o período -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-5">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    Sinais de Alerta — Análise do Período
+                    <span class="text-[9px] text-floridaOrange bg-orange-500/10 px-2 py-0.5 rounded-full normal-case font-semibold tracking-normal">IA · Claude</span>
+                </h3>
+                <div id="sinaisBox" class="space-y-3">
+                    <div class="p-3.5 text-center text-slate-500 text-xs">analisando o período…</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONFIGURAÇÕES DOS GRÁFICOS -->
+    <script>
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.borderColor = '#1e293b';
+
+        // 1. Volume Diário — 4 indicadores reais (populado por atualizarGrafico via edge)
+        const ctxAtividades = document.getElementById('chartAtividades').getContext('2d');
+        window.chartAtividadesInst = new Chart(ctxAtividades, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Cotações feitas',     yAxisID: 'yEsq', data: [], borderColor: '#f97316', backgroundColor: 'transparent', borderWidth: 2, tension: 0.35, pointRadius: 0 },
+                    { label: 'Leads entrou',         yAxisID: 'yDir', data: [], borderColor: '#0284c7', backgroundColor: 'transparent', borderWidth: 2, tension: 0.35, pointRadius: 0 },
+                    { label: 'Reservas realizadas',  yAxisID: 'yEsq', data: [], borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2, tension: 0.35, pointRadius: 0 },
+                    { label: 'Saldo cadência',       yAxisID: 'yDir', data: [], borderColor: '#a855f7', backgroundColor: 'transparent', borderWidth: 2, tension: 0.35, pointRadius: 0 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: { legend: { position: 'top', labels: { boxWidth: 10, color: '#94a3b8', font: { size: 10 } } } },
+                scales: {
+                    yEsq: { type: 'linear', position: 'left',  grid: { color: 'rgba(51, 65, 85, 0.15)' }, title: { display: true, text: 'Cotações / Reservas', color: '#64748b', font: { size: 9 } } },
+                    yDir: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Leads / Saldo', color: '#64748b', font: { size: 9 } } },
+                    x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } }
+                }
+            }
+        });
+
+        // 2. Horário de Pico das Vendas (populado por atualizarGraficoHoras via edge)
+        const ctxSla = document.getElementById('chartSlaHorario').getContext('2d');
+        window.chartSlaHorarioInst = new Chart(ctxSla, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Pagamentos confirmados',
+                    data: [],
+                    backgroundColor: [],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { title: { display: true, text: 'Vendas' }, grid: { color: 'rgba(51, 65, 85, 0.15)' } },
+                    x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } }
+                }
+            }
+        });
+    <\/script>
+
+    <!-- DADOS REAIS — Cotações Recebidas (Site) -->
+    <script>
+        const EDGE_PAINEL = "https://abjzskmxfcqsxcoybsdg.supabase.co/functions/v1/frc-painel-eficiencia";
+
+        const fmtNum = (n) => Number(n ?? 0).toLocaleString('pt-BR');
+        const fmtPct = (p) => Math.abs(p).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+        const hojeISO = () => {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        };
+        const primeiroDiaMesISO = () => {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+        };
+
+        async function atualizarCotacoes() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const cat = document.getElementById('filtroCategoria').value;
+            const elValor = document.getElementById('kpiCotacoesValor');
+            const elVar = document.getElementById('kpiCotacoesVar');
+            if (!ini || !fim) return;
+
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        metric: 'cotacoes_recebidas',
+                        data_inicio: ini,
+                        data_fim: fim,
+                        categoria_id: cat === '' ? null : Number(cat)
+                    })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+
+                elValor.textContent = fmtNum(j.atual);
+
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.variacao_pct === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem período anterior para comparar';
+                } else if (j.variacao_pct >= 0) {
+                    elVar.className = base + 'text-accentGreen bg-emerald-500/10';
+                    elVar.textContent = '↑ +' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                } else {
+                    elVar.className = base + 'text-accentRed bg-red-500/10';
+                    elVar.textContent = '↓ -' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                }
+            } catch (e) {
+                elValor.textContent = '—';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Card 2 — Abordagens (leads que entraram no funil Comercial)
+        async function atualizarComercial() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiComercialValor');
+            const elVar = document.getElementById('kpiComercialVar');
+            if (!ini || !fim) return;
+
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        metric: 'leads_comercial',
+                        data_inicio: ini,
+                        data_fim: fim
+                    })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+
+                elValor.textContent = fmtNum(j.atual);
+
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.variacao_pct === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem período anterior para comparar';
+                } else if (j.variacao_pct >= 0) {
+                    elVar.className = base + 'text-accentGreen bg-emerald-500/10';
+                    elVar.textContent = '↑ +' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                } else {
+                    elVar.className = base + 'text-accentRed bg-red-500/10';
+                    elVar.textContent = '↓ -' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                }
+            } catch (e) {
+                elValor.textContent = '—';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Card 4 — Reservas Confirmadas (Vouchers) — venda realizada (Dunas 1ª aprovação)
+        async function atualizarConfirmadas() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const cat = document.getElementById('filtroCategoria').value;
+            const elValor = document.getElementById('kpiConfirmadasValor');
+            const elVar = document.getElementById('kpiConfirmadasVar');
+            if (!ini || !fim) return;
+
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        metric: 'reservas_confirmadas',
+                        data_inicio: ini,
+                        data_fim: fim,
+                        categoria_id: cat === '' ? null : Number(cat)
+                    })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+
+                elValor.textContent = fmtNum(j.atual);
+
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.variacao_pct === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem período anterior para comparar';
+                } else if (j.variacao_pct >= 0) {
+                    elVar.className = base + 'text-accentGreen bg-emerald-500/10';
+                    elVar.textContent = '↑ +' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                } else {
+                    elVar.className = base + 'text-accentRed bg-red-500/10';
+                    elVar.textContent = '↓ -' + fmtPct(j.variacao_pct) + '% vs. período anterior';
+                }
+            } catch (e) {
+                elValor.textContent = '—';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Card 5 — Fluxo do Funil Cadência (entradas − saídas). Enchendo (saldo+) = verde; esvaziando (saldo−) = vermelho
+        async function atualizarFluxo() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiFluxoValor');
+            const elVar = document.getElementById('kpiFluxoVar');
+            if (!ini || !fim) return;
+
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'fluxo_cadencia', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+
+                const saldo = j.saldo;
+                const sinal = saldo > 0 ? '+' : (saldo < 0 ? '−' : '');
+                elValor.textContent = sinal + fmtNum(Math.abs(saldo));
+                elValor.className = 'text-2xl font-black mt-1 ' + (saldo >= 0 ? 'text-accentGreen' : 'text-accentRed');
+
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                const seta = saldo >= 0 ? '▲ enchendo' : '▼ esvaziando';
+                elVar.className = base + (saldo >= 0 ? 'text-accentGreen bg-emerald-500/10' : 'text-accentRed bg-red-500/10');
+                elVar.textContent = seta + ' · ' + fmtNum(j.entradas) + ' entraram / ' + fmtNum(j.saidas) + ' saíram';
+            } catch (e) {
+                elValor.textContent = '—';
+                elValor.className = 'text-2xl font-black text-white mt-1';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Gráfico — Volume Diário (4 linhas reais no período/categoria)
+        async function atualizarGrafico() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const cat = document.getElementById('filtroCategoria').value;
+            const chart = window.chartAtividadesInst;
+            if (!ini || !fim || !chart) return;
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'series_diario', data_inicio: ini, data_fim: fim, categoria_id: cat === '' ? null : Number(cat) })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                chart.data.labels = j.labels.map(d => d.slice(8, 10) + '/' + d.slice(5, 7));
+                chart.data.datasets[0].data = j.series.cotacoes;
+                chart.data.datasets[1].data = j.series.leads;
+                chart.data.datasets[2].data = j.series.reservas;
+                chart.data.datasets[3].data = j.series.saldo;
+                chart.update();
+            } catch (e) { /* mantém o gráfico anterior em caso de erro */ }
+        }
+
+        // Tabela — Eficiência por vendedor (funil lead-a-lead + vouchers reais Dunas)
+        async function atualizarTabelaVendedores() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const tbody = document.getElementById('tabelaVendedoresBody');
+            if (!ini || !fim || !tbody) return;
+            tbody.innerHTML = '<tr><td colspan="4" class="py-3 text-center text-slate-500">carregando…</td></tr>';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'tabela_vendedores', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                if (!j.rows || !j.rows.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="py-3 text-center text-slate-500">sem dados no período</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = j.rows.map(r => {
+                    const eng = r.engajamento_pct;
+                    const corEng = (eng === null || eng === undefined) ? 'text-slate-400'
+                        : (eng >= 60 ? 'text-accentGreen' : (eng >= 40 ? 'text-yellow-500' : 'text-accentRed'));
+                    const engTxt = (eng === null || eng === undefined) ? '—' : ('(' + eng + '%)');
+                    const conv = r.conversao_pct;
+                    const corConv = (conv === null || conv === undefined) ? 'text-slate-500'
+                        : (conv >= 30 ? 'text-accentGreen' : (conv >= 15 ? 'text-yellow-500' : 'text-accentRed'));
+                    const convTxt = (conv === null || conv === undefined) ? '—' : ('(' + conv + '%)');
+                    return '<tr class="hover:bg-slate-800/30 transition-colors cursor-pointer">' +
+                        '<td class="py-2.5 font-medium text-white">' + (r.seller_name || '—') + '</td>' +
+                        '<td class="py-2.5 text-center text-slate-300">' + fmtNum(r.abordados) + '</td>' +
+                        '<td class="py-2.5 text-center text-slate-300">' + fmtNum(r.respondidos) + ' <span class="' + corEng + '">' + engTxt + '</span></td>' +
+                        '<td class="py-2.5 text-right text-white font-bold">' + fmtNum(r.vouchers) + ' <span class="' + corConv + '">' + convTxt + '</span></td>' +
+                        '</tr>';
+                }).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-3 text-center text-accentRed">erro ao carregar</td></tr>';
+            }
+        }
+
+        // Formata minutos → "11,4 min" ou "2h 26min"
+        function fmtTempo(min) {
+            if (min < 60) return min.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' <span class="text-sm font-normal text-slate-400">min</span>';
+            return Math.floor(min / 60) + 'h ' + Math.round(min % 60) + '<span class="text-sm font-normal text-slate-400">min</span>';
+        }
+        function fmtDelta(min) {
+            if (min < 60) return min.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' min';
+            return Math.floor(min / 60) + 'h' + Math.round(min % 60);
+        }
+
+        // Card SLA — Speed to Lead Geral (mediana entrada Comercial → 1ª resposta). Tempo: cair = verde
+        async function atualizarSpeed() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiSpeedValor');
+            const elVar = document.getElementById('kpiSpeedVar');
+            if (!ini || !fim) return;
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'speed_to_lead', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.mediana_min === null) {
+                    elValor.innerHTML = '<span class="text-slate-500">sem dados</span>';
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem mensagem registrada no período';
+                    return;
+                }
+                elValor.innerHTML = fmtTempo(j.mediana_min);
+
+                if (j.mediana_anterior_min === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem período anterior para comparar';
+                } else {
+                    const d = j.mediana_min - j.mediana_anterior_min;
+                    if (d < 0) {
+                        elVar.className = base + 'text-accentGreen bg-emerald-500/10';
+                        elVar.textContent = '↓ ' + fmtDelta(Math.abs(d)) + ' mais rápido vs. período anterior';
+                    } else if (d > 0) {
+                        elVar.className = base + 'text-accentRed bg-red-500/10';
+                        elVar.textContent = '↑ ' + fmtDelta(Math.abs(d)) + ' mais lento vs. período anterior';
+                    } else {
+                        elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                        elVar.textContent = 'igual ao período anterior';
+                    }
+                }
+            } catch (e) {
+                elValor.innerHTML = '<span class="text-accentRed">—</span>';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Card SLA — Ciclo Lead → Reserva (mediana em dias). Menos dias = verde
+        async function atualizarCiclo() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiCicloValor');
+            const elVar = document.getElementById('kpiCicloVar');
+            if (!ini || !fim) return;
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'ciclo_lead_reserva', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.mediana_dias === null) {
+                    elValor.innerHTML = '<span class="text-slate-500">sem dados</span>';
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem venda confirmada no período';
+                    return;
+                }
+                elValor.innerHTML = j.mediana_dias.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' <span class="text-sm font-normal text-slate-400">dias</span>';
+                if (j.mediana_anterior_dias === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem período anterior para comparar';
+                } else {
+                    const d = j.mediana_dias - j.mediana_anterior_dias;
+                    const dtxt = Math.abs(d).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' dias';
+                    if (d < 0) { elVar.className = base + 'text-accentGreen bg-emerald-500/10'; elVar.textContent = '↓ ' + dtxt + ' mais rápido vs. período anterior'; }
+                    else if (d > 0) { elVar.className = base + 'text-accentRed bg-red-500/10'; elVar.textContent = '↑ ' + dtxt + ' mais lento vs. período anterior'; }
+                    else { elVar.className = base + 'text-slate-400 bg-slate-500/10'; elVar.textContent = 'igual ao período anterior'; }
+                }
+            } catch (e) {
+                elValor.innerHTML = '<span class="text-accentRed">—</span>';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Card SLA — % de simulações reais atendidas na meta (5 min). Maior = verde
+        async function atualizarSla() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiSlaValor');
+            const elVar = document.getElementById('kpiSlaVar');
+            if (!ini || !fim) return;
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'sla_simulacao', data_inicio: ini, data_fim: fim, meta_min: 5 })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.pct_atual === null) {
+                    elValor.innerHTML = '<span class="text-slate-500">sem dados</span>';
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem simulação no período';
+                    return;
+                }
+                elValor.innerHTML = j.pct_atual.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '<span class="text-sm font-normal text-slate-400">%</span>';
+                if (j.pct_anterior === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'atendidos em ≤ ' + j.meta_min + ' min';
+                } else {
+                    const d = j.pct_atual - j.pct_anterior;
+                    const dtxt = Math.abs(d).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+                    if (d >= 0) { elVar.className = base + 'text-accentGreen bg-emerald-500/10'; elVar.textContent = '↑ +' + dtxt + ' pts · atendidos em ≤ ' + j.meta_min + ' min'; }
+                    else { elVar.className = base + 'text-accentRed bg-red-500/10'; elVar.textContent = '↓ -' + dtxt + ' pts · atendidos em ≤ ' + j.meta_min + ' min'; }
+                }
+            } catch (e) {
+                elValor.innerHTML = '<span class="text-accentRed">—</span>';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Gráfico — Horário de pico das vendas (barras: laranja=pico, âmbar=alto, azul=resto)
+        async function atualizarGraficoHoras() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const chart = window.chartSlaHorarioInst;
+            if (!ini || !fim || !chart) return;
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'vendas_por_hora', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const max = Math.max(1, ...j.data);
+                const cores = j.data.map(v => v >= 0.8 * max ? '#f97316' : (v >= 0.5 * max ? '#f59e0b' : '#0284c7'));
+                chart.data.labels = j.labels;
+                chart.data.datasets[0].data = j.data;
+                chart.data.datasets[0].backgroundColor = cores;
+                chart.update();
+            } catch (e) { /* mantém o gráfico anterior em caso de erro */ }
+        }
+
+        // Card SLA — % de cotações que fecham em ≤7 dias (janela madura). Maior = verde
+        async function atualizarCiclo7() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const elValor = document.getElementById('kpiCiclo7Valor');
+            const elVar = document.getElementById('kpiCiclo7Var');
+            if (!ini || !fim) return;
+            elValor.textContent = '…';
+            elVar.textContent = 'carregando…';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'conversao_7dias', data_inicio: ini, data_fim: fim, dias: 7 })
+                });
+                const j = await resp.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const base = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block ';
+                if (j.pct_atual === null) {
+                    elValor.innerHTML = '<span class="text-slate-500">sem dados</span>';
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'sem cotação madura no período';
+                    return;
+                }
+                elValor.innerHTML = j.pct_atual.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '<span class="text-sm font-normal text-slate-400">%</span>';
+                if (j.pct_anterior === null) {
+                    elVar.className = base + 'text-slate-400 bg-slate-500/10';
+                    elVar.textContent = 'fecham em ≤ ' + j.dias + ' dias';
+                } else {
+                    const d = j.pct_atual - j.pct_anterior;
+                    const dtxt = Math.abs(d).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+                    if (d >= 0) { elVar.className = base + 'text-accentGreen bg-emerald-500/10'; elVar.textContent = '↑ +' + dtxt + ' pts · fecham em ≤ ' + j.dias + ' dias'; }
+                    else { elVar.className = base + 'text-accentRed bg-red-500/10'; elVar.textContent = '↓ -' + dtxt + ' pts · fecham em ≤ ' + j.dias + ' dias'; }
+                }
+            } catch (e) {
+                elValor.innerHTML = '<span class="text-accentRed">—</span>';
+                elVar.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded mt-2 inline-block text-accentRed bg-red-500/10';
+                elVar.textContent = 'erro ao carregar';
+            }
+        }
+
+        // Painel de Sinais — 5 análises geradas por IA (Claude) sobre o período
+        const escHtml = (s) => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+        const estiloSinal = {
+            critico:  { bg: 'bg-red-500/10',     bd: 'border-red-500/25',     tc: 'text-accentRed',   dot: '🔴' },
+            atencao:  { bg: 'bg-yellow-500/10',  bd: 'border-yellow-500/25',  tc: 'text-yellow-500',  dot: '🟡' },
+            positivo: { bg: 'bg-emerald-500/10', bd: 'border-emerald-500/25', tc: 'text-accentGreen', dot: '🟢' },
+            info:     { bg: 'bg-sky-500/10',     bd: 'border-sky-500/25',     tc: 'text-floridaBlue', dot: '🔵' }
+        };
+        async function atualizarSinais() {
+            const ini = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            const box = document.getElementById('sinaisBox');
+            if (!ini || !fim || !box) return;
+            box.innerHTML = '<div class="p-3.5 text-center text-slate-500 text-xs">analisando o período com IA…</div>';
+            try {
+                const resp = await fetch(EDGE_PAINEL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metric: 'sinais', data_inicio: ini, data_fim: fim })
+                });
+                const j = await resp.json();
+                if (!j.ok || !j.sinais || !j.sinais.length) throw new Error(j.error || 'sem sinais');
+                box.innerHTML = j.sinais.map(s => {
+                    const e = estiloSinal[s.severidade] || estiloSinal.info;
+                    return '<div class="p-3.5 ' + e.bg + ' border ' + e.bd + ' rounded-xl">' +
+                        '<h4 class="text-xs font-bold text-white flex items-start gap-1.5"><span>' + e.dot + '</span><span>' + escHtml(s.titulo) + '</span></h4>' +
+                        '<p class="text-[10.5px] text-slate-400 mt-1 leading-relaxed">' + escHtml(s.descricao) + '</p>' +
+                        '<p class="text-[10px] mt-1.5 ' + e.tc + ' font-semibold">▸ ' + escHtml(s.acao) + '</p>' +
+                        '</div>';
+                }).join('');
+            } catch (e) {
+                box.innerHTML = '<div class="p-3.5 text-center text-accentRed text-xs">não foi possível gerar os sinais agora</div>';
+            }
+        }
+        // Debounce: junta mudanças rápidas de filtro numa análise só (a IA leva alguns segundos)
+        let sinaisTimer = null;
+        function atualizarSinaisDebounced() {
+            const box = document.getElementById('sinaisBox');
+            if (box) box.innerHTML = '<div class="p-3.5 text-center text-slate-500 text-xs">analisando o período com IA…</div>';
+            clearTimeout(sinaisTimer);
+            sinaisTimer = setTimeout(atualizarSinais, 1000);
+        }
+
+        // Atualiza todos os cards ligados de uma vez
+        function atualizarPainel() {
+            atualizarCotacoes();
+            atualizarComercial();
+            atualizarConfirmadas();
+            atualizarFluxo();
+            atualizarGrafico();
+            atualizarTabelaVendedores();
+            atualizarSpeed();
+            atualizarCiclo();
+            atualizarSla();
+            atualizarGraficoHoras();
+            atualizarCiclo7();
+            atualizarSinaisDebounced();
+        }
+
+        // Datas padrão: 1º dia do mês → hoje
+        document.getElementById('dataInicio').value = primeiroDiaMesISO();
+        document.getElementById('dataFim').value = hojeISO();
+
+        // Recalcula ao mudar qualquer filtro (change + input = robusto pra calendário ou digitação)
+        ['dataInicio', 'dataFim', 'filtroCategoria'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('change', atualizarPainel);
+            el.addEventListener('input', atualizarPainel);
+        });
+
+        // Primeira carga
+        atualizarPainel();
+    <\/script>
+</body>
+</html>
+</script>
+<script type="text/html" id="src1">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florida Rental Car - SLA & Speed to Lead</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080e1a',
+                        cardBg: '#111b2d',
+                        floridaOrange: '#f97316', // Laranja Sol da Flórida
+                        floridaBlue: '#0284c7', // Azul Miami
+                        accentGreen: '#10b981',
+                        accentRed: '#ef4444'
+                    }
+                }
+            }
+        }
+    <\/script>
+    <style>
+        .smooth-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glow-orange:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(249, 115, 22, 0.4);
+            border-color: rgba(249, 115, 22, 0.5);
+            background-color: #1a1f33;
+        }
+        .glow-blue:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(2, 132, 199, 0.4);
+            border-color: rgba(2, 132, 199, 0.5);
+            background-color: #12233f;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6">
+
+    <!-- Header Principal -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8 pb-6 border-b border-slate-800">
+        <div>
+            <span class="text-xs font-bold text-floridaBlue uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full">Florida Rental Car • Performance de Atendimento</span>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight mt-2">1B. SLA e Speed to Lead</h1>
+            <p class="text-sm text-slate-400">Tempo de resposta do lead no primeiro contato e dias médios para transição de etapa no CRM.</p>
+        </div>
+        
+        <!-- Filtros Táticos -->
+        <div class="flex flex-wrap gap-3">
+            <div class="flex items-center gap-2 bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-2.5 transition-all">
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Período</span>
+                <input type="date" id="dataInicio" class="bg-transparent text-sm text-slate-300 focus:outline-none cursor-pointer [color-scheme:dark]">
+                <span class="text-slate-500 text-sm">até</span>
+                <input type="date" id="dataFim" class="bg-transparent text-sm text-slate-300 focus:outline-none cursor-pointer [color-scheme:dark]">
+            </div>
+        </div>
+    </header>
+
+    <!-- GRID SUPERIOR: KPIs DE SLA (IGUAIS À DISPOSIÇÃO DA FOTO) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        
+        <!-- Bloco 1: Tempo Médio de Primeiro Contato -->
+        <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-2xl p-6 cursor-pointer">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex justify-between items-center">
+                Tempo Médio de Primeiro Contato
+                <span class="text-floridaBlue">⏱️</span>
+            </p>
+            <div class="text-center py-4">
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">TEMPO TÍPICO DE PRIMEIRO CONTATO (MEDIANA)</p>
+                <p id="kpiTempoValor" class="text-5xl font-black text-white mt-2">…</p>
+                <span id="kpiTempoVar" class="text-xs text-slate-400 font-bold bg-slate-500/10 px-2 py-0.5 rounded mt-3 inline-block">carregando…</span>
+            </div>
+            <!-- Linha de tendência simulada de minutos -->
+            <div class="h-20 mt-4">
+                <canvas id="chartTendenciaMinutos"></canvas>
+            </div>
+        </div>
+
+        <!-- Bloco 2: % Leads Respondidos < 10 Minutos -->
+        <div class="smooth-card glow-blue bg-cardBg border border-slate-800 rounded-2xl p-6 cursor-pointer">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex justify-between items-center">
+                Leads Respondidos dentro do SLA
+                <span class="text-accentGreen">🎯</span>
+            </p>
+            <div class="text-center py-4">
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">% LEADS RESPONDIDOS &lt; 10 MIN.</p>
+                <p id="kpiSla10Valor" class="text-5xl font-black text-white mt-2">…</p>
+                <span id="kpiSla10Var" class="text-xs text-slate-400 font-bold bg-slate-500/10 px-2 py-0.5 rounded mt-3 inline-block">carregando…</span>
+            </div>
+            <!-- Linha de tendência simulada de % -->
+            <div class="h-20 mt-4">
+                <canvas id="chartTendenciaPercentual"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GRID INFERIOR: DISTRIBUIÇÃO E TRANSIÇÃO (LARGURA INTEGRAL) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Distribuição de Tempo de Resposta (Barras Verticais Idênticas à Foto) -->
+        <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">
+                Distribuição de Tempo de Resposta (Volumetria)
+            </h3>
+            <div class="h-56">
+                <canvas id="chartDistribucaoSla"></canvas>
+            </div>
+        </div>
+
+        <!-- Transição de Etapa em Dias (Linha Idêntica à Foto) -->
+        <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">
+                Transição de Etapa (Dias Médios de Permanência)
+            </h3>
+            <div class="h-56">
+                <canvas id="chartTransicaoEtapas"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONFIGURAÇÕES DOS GRÁFICOS (vazios; populados por dados reais) -->
+    <script>
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#1e293b';
+        const miniOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: false } } };
+
+        window.chart1B_min = new Chart(document.getElementById('chartTendenciaMinutos').getContext('2d'), {
+            type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#0284c7', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3, spanGaps: true }] }, options: miniOpts
+        });
+        window.chart1B_pct = new Chart(document.getElementById('chartTendenciaPercentual').getContext('2d'), {
+            type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3, spanGaps: true }] }, options: miniOpts
+        });
+        window.chart1B_dist = new Chart(document.getElementById('chartDistribucaoSla').getContext('2d'), {
+            type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0284c7', '#10b981', '#f59e0b', '#ef4444'], borderRadius: 4, barThickness: 40 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(51, 65, 85, 0.1)' } }, x: { grid: { display: false } } } }
+        });
+        window.chart1B_trans = new Chart(document.getElementById('chartTransicaoEtapas').getContext('2d'), {
+            type: 'line', data: { labels: [], datasets: [{ label: 'Dias', data: [], borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)', borderWidth: 3, pointRadius: 4, fill: true, tension: 0.2 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { title: { display: true, text: 'Dias (mediana)' }, grid: { color: 'rgba(51, 65, 85, 0.1)' } }, x: { grid: { display: false }, ticks: { maxRotation: 30, minRotation: 30, font: { size: 9 } } } } }
+        });
+    <\/script>
+
+    <!-- DADOS REAIS -->
+    <script>
+        const EDGE_PAINEL = "https://abjzskmxfcqsxcoybsdg.supabase.co/functions/v1/frc-painel-eficiencia";
+        const META_MIN = 10;
+        const hojeISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+        const primeiroDiaMesISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01'; };
+        const fmtNum = (n) => Number(n ?? 0).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+        function fmtTempo(min) {
+            if (min < 60) return fmtNum(min) + ' <span class="text-2xl font-normal text-slate-400">min</span>';
+            return Math.floor(min / 60) + 'h ' + Math.round(min % 60) + '<span class="text-2xl font-normal text-slate-400">min</span>';
+        }
+        function fmtDur(min) { return min < 60 ? fmtNum(min) + ' min' : Math.floor(min / 60) + 'h' + String(Math.round(min % 60)).padStart(2, '0'); }
+        const post = (b) => fetch(EDGE_PAINEL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then(r => r.json());
+
+        async function atualizarCard1() {
+            const ini = document.getElementById('dataInicio').value, fim = document.getElementById('dataFim').value;
+            const ev = document.getElementById('kpiTempoValor'), evar = document.getElementById('kpiTempoVar');
+            if (!ini || !fim) return;
+            ev.textContent = '…'; evar.textContent = 'carregando…';
+            try {
+                const j = await post({ metric: 'speed_to_lead', data_inicio: ini, data_fim: fim });
+                if (!j.ok) throw 0;
+                const base = 'text-xs font-bold px-2 py-0.5 rounded mt-3 inline-block ';
+                if (j.mediana_min === null) { ev.innerHTML = '<span class="text-slate-500">sem dados</span>'; evar.className = base + 'text-slate-400 bg-slate-500/10'; evar.textContent = 'sem mensagem no período'; return; }
+                ev.innerHTML = fmtTempo(j.mediana_min);
+                if (j.mediana_anterior_min === null) { evar.className = base + 'text-slate-400 bg-slate-500/10'; evar.textContent = 'sem período anterior'; }
+                else { const d = j.mediana_min - j.mediana_anterior_min;
+                    if (d < 0) { evar.className = base + 'text-accentGreen bg-emerald-500/10'; evar.textContent = '↓ ' + fmtDur(Math.abs(d)) + ' mais rápido vs. período anterior'; }
+                    else if (d > 0) { evar.className = base + 'text-accentRed bg-red-500/10'; evar.textContent = '↑ ' + fmtDur(Math.abs(d)) + ' mais lento vs. período anterior'; }
+                    else { evar.className = base + 'text-slate-400 bg-slate-500/10'; evar.textContent = 'igual ao período anterior'; }
+                }
+            } catch { ev.innerHTML = '<span class="text-accentRed">—</span>'; evar.textContent = 'erro'; }
+        }
+        async function atualizarCard2() {
+            const ini = document.getElementById('dataInicio').value, fim = document.getElementById('dataFim').value;
+            const ev = document.getElementById('kpiSla10Valor'), evar = document.getElementById('kpiSla10Var');
+            if (!ini || !fim) return;
+            ev.textContent = '…'; evar.textContent = 'carregando…';
+            try {
+                const j = await post({ metric: 'sla_simulacao', data_inicio: ini, data_fim: fim, meta_min: META_MIN });
+                if (!j.ok) throw 0;
+                const base = 'text-xs font-bold px-2 py-0.5 rounded mt-3 inline-block ';
+                if (j.pct_atual === null) { ev.innerHTML = '<span class="text-slate-500">sem dados</span>'; evar.className = base + 'text-slate-400 bg-slate-500/10'; evar.textContent = 'sem simulação no período'; return; }
+                ev.innerHTML = fmtNum(j.pct_atual) + '<span class="text-2xl font-normal text-slate-400">%</span>';
+                if (j.pct_anterior === null) { evar.className = base + 'text-slate-400 bg-slate-500/10'; evar.textContent = 'atendidos em ≤ ' + META_MIN + ' min'; }
+                else { const d = j.pct_atual - j.pct_anterior;
+                    if (d >= 0) { evar.className = base + 'text-accentGreen bg-emerald-500/10'; evar.textContent = '↑ +' + fmtNum(Math.abs(d)) + ' pts vs. período anterior'; }
+                    else { evar.className = base + 'text-accentRed bg-red-500/10'; evar.textContent = '↓ -' + fmtNum(Math.abs(d)) + ' pts vs. período anterior'; }
+                }
+            } catch { ev.innerHTML = '<span class="text-accentRed">—</span>'; evar.textContent = 'erro'; }
+        }
+        async function atualizarSeries() {
+            const ini = document.getElementById('dataInicio').value, fim = document.getElementById('dataFim').value;
+            if (!ini || !fim) return;
+            try {
+                const j = await post({ metric: 'sla_series_diario', data_inicio: ini, data_fim: fim, meta_min: META_MIN });
+                if (!j.ok) return;
+                const labels = j.labels.map(d => d.slice(8, 10) + '/' + d.slice(5, 7));
+                window.chart1B_min.data.labels = labels; window.chart1B_min.data.datasets[0].data = j.mediana; window.chart1B_min.update();
+                window.chart1B_pct.data.labels = labels; window.chart1B_pct.data.datasets[0].data = j.sla; window.chart1B_pct.update();
+            } catch {}
+        }
+        async function atualizarDist() {
+            const ini = document.getElementById('dataInicio').value, fim = document.getElementById('dataFim').value;
+            if (!ini || !fim) return;
+            try {
+                const j = await post({ metric: 'speed_distribuicao', data_inicio: ini, data_fim: fim });
+                if (!j.ok) return;
+                window.chart1B_dist.data.labels = j.labels; window.chart1B_dist.data.datasets[0].data = j.data; window.chart1B_dist.update();
+            } catch {}
+        }
+        async function atualizarTrans() {
+            const ini = document.getElementById('dataInicio').value, fim = document.getElementById('dataFim').value;
+            if (!ini || !fim) return;
+            try {
+                const j = await post({ metric: 'transicao_etapas', data_inicio: ini, data_fim: fim });
+                if (!j.ok) return;
+                window.chart1B_trans.data.labels = j.labels; window.chart1B_trans.data.datasets[0].data = j.dias; window.chart1B_trans.update();
+            } catch {}
+        }
+        function atualizarPainel1B() { atualizarCard1(); atualizarCard2(); atualizarSeries(); atualizarDist(); atualizarTrans(); }
+
+        document.getElementById('dataInicio').value = primeiroDiaMesISO();
+        document.getElementById('dataFim').value = hojeISO();
+        ['dataInicio', 'dataFim'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('change', atualizarPainel1B);
+            el.addEventListener('input', atualizarPainel1B);
+        });
+        atualizarPainel1B();
+    <\/script>
+</body>
+</html>
+</script>
+<script type="text/html" id="src2">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florida Rental Car - Inteligência de Canais & CAC</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080e1a',
+                        cardBg: '#111b2d',
+                        floridaOrange: '#f97316', 
+                        floridaBlue: '#0284c7', 
+                        accentGreen: '#10b981',
+                        accentRed: '#ef4444'
+                    }
+                }
+            }
+        }
+    <\/script>
+    <style>
+        .smooth-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glow-orange:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(249, 115, 22, 0.4);
+            border-color: rgba(249, 115, 22, 0.5);
+            background-color: #1a1f33;
+        }
+        .glow-blue:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -10px rgba(2, 132, 199, 0.4);
+            border-color: rgba(2, 132, 199, 0.5);
+            background-color: #12233f;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6">
+
+    <!-- Header Principal -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8 pb-6 border-b border-slate-800">
+        <div>
+            <span class="text-xs font-bold text-floridaBlue uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full">Florida Rental Car • Direcionamento Estratégico</span>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight mt-2">2. Inteligência de Canais e CAC</h1>
+            <p class="text-sm text-slate-400">Performance e receita por canal de origem, distribuição de retirada (pick-up) por mês de entrada e retorno da mídia paga (LTV vs CAC).</p>
+        </div>
+        
+        <!-- Filtros Táticos: período De → Até -->
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-col">
+                <label class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">De</label>
+                <input type="date" id="dtIni" class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-floridaBlue transition-all">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Até</label>
+                <input type="date" id="dtFim" class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-floridaBlue transition-all">
+            </div>
+            <button id="btnAplicar" class="bg-floridaBlue hover:bg-sky-600 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all">Aplicar</button>
+        </div>
+    </header>
+
+    <!-- GRID SUPERIOR: PERFORMANCE DE CANAIS -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Matriz de Performance por Canal -->
+        <div class="lg:col-span-2 bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">Matriz de Performance por Canal de Aquisição</h3>
+            <p class="text-[11px] text-slate-400 mb-4">Origem das <span class="text-slate-300">cotações (orçamentos criados)</span> no período. Conversão = % que virou reserva paga. <span id="matrizPeriodo" class="text-slate-500"></span></p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400">
+                            <th class="pb-3">Canal</th>
+                            <th class="pb-3 text-center">Cotações</th>
+                            <th class="pb-3 text-center">Conversão %</th>
+                            <th class="pb-3 text-center">Ticket Médio</th>
+                            <th class="pb-3 text-right">Receita Gerada</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrizBody" class="divide-y divide-slate-800/40">
+                        <tr><td colspan="5" class="py-6 text-center text-slate-500">Carregando…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Gráfico de Distribuição de Receita por Canal -->
+        <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">Distribuição de Receita por Canal</h3>
+            <p class="text-[11px] text-slate-400 mb-3">Só vendas confirmadas pelo Dunas (reservas open + em uso + concluídas).</p>
+            <div class="h-44">
+                <canvas id="chartReceitaCanais"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GRID INFERIOR: PLANILHA COHORT (IGUAL À FOTO) & EVOLUÇÃO LTV/CAC -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- PLANILHA COHORT DE RETENÇÃO (LARGURA 2/3) -->
+        <div class="lg:col-span-2 bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Distribuição de Retirada (Pick-up) por Mês de Entrada</h3>
+            <p class="text-[11px] text-slate-400 mb-4">De quem entrou no mês (fechados + cotações), quando retira o carro. <span class="text-slate-300">Mês 1 = mesmo mês</span>, Mês 2 = seguinte, e assim por diante. <span id="cohortPeriodo" class="text-slate-500"></span></p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-center text-xs border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400">
+                            <th class="pb-3 text-left">Mês de Entrada</th>
+                            <th class="pb-3">Clientes</th>
+                            <th class="pb-3">Mês 1</th>
+                            <th class="pb-3">Mês 2</th>
+                            <th class="pb-3">Mês 3</th>
+                            <th class="pb-3">Mês 4</th>
+                            <th class="pb-3">Mês 5+</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cohortBody" class="divide-y divide-slate-900">
+                        <tr><td colspan="7" class="py-6 text-center text-slate-500">Carregando…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- GRÁFICO EVOLUÇÃO DO LTV E CAC (LARGURA 1/3) -->
+        <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">Retorno da Mídia Paga — LTV vs CAC</h3>
+            <p class="text-[11px] text-slate-400 mb-3">Receita por cliente pago (LTV) vs custo de aquisição (CAC), por mês. Segmento rastreado por clique de anúncio; valores em receita bruta.</p>
+            <div class="h-48">
+                <canvas id="chartLtvCac"></canvas>
+            </div>
+            <div class="mt-4 text-[10px] text-slate-500 flex justify-between">
+                <span>Saudável: LTV ≥ 3× CAC</span>
+                <span id="ltvCacBadge" class="font-bold text-slate-400">Retorno: —</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONFIGURAÇÕES DOS GRÁFICOS -->
+    <script>
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#1e293b';
+
+        // 1. Distribuição de Receita por Canal (Doughnut) — alimentado pela matriz real
+        const ctxReceita = document.getElementById('chartReceitaCanais').getContext('2d');
+        window.chartReceita = new Chart(ctxReceita, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [],
+                    borderWidth: 3,
+                    borderColor: '#111b2d',
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 10, font: { size: 10 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (c) => {
+                                const v = c.parsed, tot = c.dataset.data.reduce((a, b) => a + b, 0);
+                                const pct = tot ? (100 * v / tot) : 0;
+                                return ` ${c.label}: ${fmtReceita(v)} (${pct.toFixed(1)}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '68%'
+            }
+        });
+
+        // 2. Retorno da Mídia Paga: LTV vs CAC por mês — alimentado por dados reais
+        const ctxLtv = document.getElementById('chartLtvCac').getContext('2d');
+        window.chartLtvCac = new Chart(ctxLtv, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'LTV (receita/cliente)', data: [], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', borderWidth: 3, pointRadius: 3, tension: 0.3, fill: true },
+                    { label: 'CAC (custo/cliente)', data: [], borderColor: '#ef4444', borderWidth: 2, borderDash: [5, 5], pointRadius: 2, tension: 0.3, fill: false }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } },
+                    tooltip: { callbacks: { label: (c) => ` ${c.dataset.label}: R$ ${Number(c.parsed.y).toLocaleString('pt-BR')}` } }
+                },
+                scales: {
+                    y: { grid: { color: 'rgba(51, 65, 85, 0.15)' }, ticks: { callback: (v) => 'R$ ' + (v / 1000) + 'k' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    <\/script>
+
+    <!-- DADOS REAIS: Matriz de Canais (edge frc-painel-eficiencia) -->
+    <script>
+        const EDGE_PAINEL = 'https://abjzskmxfcqsxcoybsdg.supabase.co/functions/v1/frc-painel-eficiencia';
+        const FLOOR_RECEITA = '2025-12-01'; // Dunas confiável a partir daqui; antes: receita/conversão/retorno = sem dado (cotações e cohort valem pra todo histórico)
+        const fmtInt = n => (n == null ? '—' : Number(n).toLocaleString('pt-BR'));
+        const fmtBRL = n => (n == null ? '—' : 'R$ ' + Number(n).toLocaleString('pt-BR'));
+        const fmtPct = n => (n == null ? '—' : Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%');
+        function fmtReceita(n) {
+            if (n == null) return '—';
+            n = Number(n);
+            if (n >= 1e6) return 'R$ ' + (n / 1e6).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' mi';
+            if (n >= 1e3) return 'R$ ' + Math.round(n / 1e3).toLocaleString('pt-BR') + ' mil';
+            return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+        }
+        function isoHoje() { return new Date().toISOString().slice(0, 10); }
+        function isoMesesAtras(m) { const d = new Date(); d.setMonth(d.getMonth() - m); return d.toISOString().slice(0, 10); }
+        function fmtDataBR(iso) { const [a, m, d] = iso.split('-'); return `${d}/${m}/${a}`; }
+        const CORES_CANAL = {
+            'Sem rastreio': '#64748b', 'Meta / Pago': '#0284c7', 'Instagram / Orgânico': '#ec4899',
+            'Google / Pago': '#f97316', 'Google / Orgânico': '#10b981', 'Indicação': '#8b5cf6',
+            'Site / Direto': '#14b8a6', 'Agências / B2B': '#eab308'
+        };
+
+        async function carregarMatriz() {
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            const body = document.getElementById('matrizBody');
+            const per = document.getElementById('matrizPeriodo');
+            if (!di || !df) return;
+            const semReceita = df < FLOOR_RECEITA;                    // período todo antes do Dunas confiável
+            const parcialReceita = !semReceita && di < FLOOR_RECEITA; // período cruza o piso
+            const notaReceita = semReceita
+                ? ' · <span class="text-yellow-500">receita/conversão só a partir de dez/2025 (Dunas)</span>'
+                : (parcialReceita ? ' · <span class="text-slate-500">receita/conversão contam desde dez/2025</span>' : '');
+            per.innerHTML = `${fmtDataBR(di)} → ${fmtDataBR(df)}${notaReceita}`;
+            body.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Carregando…</td></tr>';
+            try {
+                const r = await fetch(EDGE_PAINEL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ metric: 'matriz_canais', data_inicio: di, data_fim: df }) });
+                const j = await r.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const rows = j.rows || [];
+                if (!rows.length) { body.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Sem dados no período</td></tr>'; return; }
+                body.innerHTML = rows.map(x => {
+                    const cv = x.conversao_pct;
+                    const cvCls = cv == null ? 'text-slate-500' : (cv >= 25 ? 'text-accentGreen' : (cv >= 12 ? 'text-yellow-500' : 'text-accentRed'));
+                    const canalCls = x.canal === 'Sem rastreio' ? 'text-slate-400 italic' : 'text-white';
+                    const cvCell = semReceita ? '<span class="text-slate-600">—</span>' : `<span class="${cvCls} font-bold">${fmtPct(cv)}</span>`;
+                    const ticketCell = semReceita ? '<span class="text-slate-600">—</span>' : fmtBRL(x.ticket_medio);
+                    const receitaCell = semReceita ? '<span class="text-slate-600">—</span>' : fmtReceita(x.receita);
+                    return `<tr class="hover:bg-slate-800/30 transition-colors">
+                        <td class="py-3 font-semibold ${canalCls}">${x.canal}</td>
+                        <td class="py-3 text-center text-slate-300">${fmtInt(x.cotacoes)}</td>
+                        <td class="py-3 text-center">${cvCell}</td>
+                        <td class="py-3 text-center text-slate-300">${ticketCell}</td>
+                        <td class="py-3 text-right text-slate-300 font-semibold">${receitaCell}</td>
+                    </tr>`;
+                }).join('');
+                // Doughnut de receita — mesma fonte da matriz (só vendas confirmadas Dunas; vazio se antes do piso)
+                if (window.chartReceita) {
+                    const comReceita = semReceita ? [] : rows.filter(x => Number(x.receita) > 0);
+                    window.chartReceita.data.labels = comReceita.map(x => x.canal);
+                    window.chartReceita.data.datasets[0].data = comReceita.map(x => Number(x.receita));
+                    window.chartReceita.data.datasets[0].backgroundColor = comReceita.map(x => CORES_CANAL[x.canal] || '#475569');
+                    window.chartReceita.update();
+                }
+            } catch (e) {
+                body.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-accentRed">Erro: ${e.message}</td></tr>`;
+            }
+        }
+
+        const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        function labelMes(iso) { const [a, m] = iso.split('-'); return MESES[Number(m) - 1] + '/' + a.slice(2); }
+
+        async function carregarLtvCac() {
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            const badge = document.getElementById('ltvCacBadge');
+            if (!di || !df || !window.chartLtvCac) return;
+            try {
+                const r = await fetch(EDGE_PAINEL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ metric: 'ltv_cac_mensal', data_inicio: di, data_fim: df }) });
+                const j = await r.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const rows = (j.rows || []).filter(x => x.mes >= FLOOR_RECEITA); // antes de dez/25 o retorno é ruído (sem Dunas + rastreio fraco)
+                if (!rows.length) {
+                    window.chartLtvCac.data.labels = [];
+                    window.chartLtvCac.data.datasets[0].data = [];
+                    window.chartLtvCac.data.datasets[1].data = [];
+                    window.chartLtvCac.update();
+                    badge.textContent = 'Sem dados (antes de dez/2025)'; badge.className = 'font-bold text-slate-500';
+                    return;
+                }
+                window.chartLtvCac.data.labels = rows.map(x => labelMes(x.mes));
+                window.chartLtvCac.data.datasets[0].data = rows.map(x => x.ltv);
+                window.chartLtvCac.data.datasets[1].data = rows.map(x => x.cac);
+                window.chartLtvCac.update();
+                // Retorno do período (ponderado): receita dos clientes pagos ÷ gasto total de anúncio
+                const totReceita = rows.reduce((a, x) => a + (Number(x.ltv) || 0) * (Number(x.clientes_pago) || 0), 0);
+                const totGasto = rows.reduce((a, x) => a + (Number(x.gasto) || 0), 0);
+                const ret = totGasto ? (totReceita / totGasto) : null;
+                if (ret == null) { badge.textContent = 'Retorno: —'; badge.className = 'font-bold text-slate-400'; }
+                else {
+                    const cls = ret >= 3 ? 'text-accentGreen' : (ret >= 1 ? 'text-yellow-500' : 'text-accentRed');
+                    badge.textContent = 'Retorno: ' + ret.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '×';
+                    badge.className = 'font-bold ' + cls;
+                }
+            } catch (e) {
+                badge.textContent = 'Erro'; badge.className = 'font-bold text-accentRed';
+            }
+        }
+
+        function heatCohort(pct) {
+            if (pct == null) return '<td class="py-2.5 text-slate-600">–</td>';
+            const a = Math.min(0.92, 0.10 + pct / 55);              // + intenso = + concentração de pick-up
+            const txt = pct >= 25 ? 'text-white font-bold' : 'text-slate-100';
+            return `<td class="py-2.5 ${txt}" style="background: rgba(16,185,129,${a.toFixed(2)})">${fmtPct(pct)}</td>`;
+        }
+        function labelCoorte(iso) { const [a, m] = iso.split('-'); return MESES[Number(m) - 1] + ' ' + a; }
+
+        async function carregarCohort() {
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            const body = document.getElementById('cohortBody');
+            const per = document.getElementById('cohortPeriodo');
+            if (!di || !df) return;
+            body.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-500">Carregando…</td></tr>';
+            try {
+                const r = await fetch(EDGE_PAINEL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ metric: 'cohort_pickup', data_inicio: di, data_fim: df }) });
+                const j = await r.json();
+                if (!j.ok) throw new Error(j.error || 'erro');
+                const rows = j.rows || [];
+                if (per) per.textContent = rows.length ? `${labelCoorte(rows[0].coorte)} → ${labelCoorte(rows[rows.length - 1].coorte)}` : '';
+                if (!rows.length) { body.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-500">Sem dados no período</td></tr>'; return; }
+                body.innerHTML = rows.map(x => `<tr>
+                    <td class="py-2.5 text-left font-semibold text-white">${labelCoorte(x.coorte)}</td>
+                    <td class="py-2.5 bg-slate-800/40 font-bold">${fmtInt(x.clientes)}</td>
+                    ${heatCohort(x.mes1)}${heatCohort(x.mes2)}${heatCohort(x.mes3)}${heatCohort(x.mes4)}${heatCohort(x.mes5plus)}
+                </tr>`).join('');
+            } catch (e) {
+                body.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-accentRed">Erro: ${e.message}</td></tr>`;
+            }
+        }
+
+        function atualizarPainel2() { carregarMatriz(); carregarLtvCac(); carregarCohort(); }
+
+        (function initPainel2() {
+            document.getElementById('dtIni').value = isoMesesAtras(6);
+            document.getElementById('dtFim').value = isoHoje();
+            document.getElementById('btnAplicar').addEventListener('click', atualizarPainel2);
+            atualizarPainel2();
+        })();
+    <\/script>
+</body>
+</html>
+</script>
+<script type="text/html" id="src3">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florida Rental Car - Pipeline, Pace & Funil</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: {
+                darkBg: '#080e1a', cardBg: '#111b2d',
+                floridaOrange: '#f97316', floridaBlue: '#0284c7',
+                accentGreen: '#10b981', accentRed: '#ef4444'
+            } } }
+        }
+    <\/script>
+    <style>
+        .smooth-card { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .glow-orange:hover { transform: translateY(-4px); box-shadow: 0 12px 25px -10px rgba(249,115,22,0.4); border-color: rgba(249,115,22,0.5); background-color: #1a1f33; }
+        .glow-blue:hover { transform: translateY(-4px); box-shadow: 0 12px 25px -10px rgba(2,132,199,0.4); border-color: rgba(2,132,199,0.5); background-color: #12233f; }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen p-6">
+
+    <!-- Header -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8 pb-6 border-b border-slate-800">
+        <div>
+            <span class="text-xs font-bold text-floridaOrange uppercase tracking-widest bg-orange-500/10 px-3 py-1 rounded-full">Florida Rental Car • Cockpit Estratégico</span>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight mt-2">3. Funil, Pace & Forecast de Vendas</h1>
+            <p class="text-sm text-slate-400">Faturamento confirmado (Dunas) em <span class="text-slate-300">USD</span>, ritmo vs meta, funil do CRM e motivos de perda. <span id="baseNota" class="text-slate-500"></span></p>
+        </div>
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-col">
+                <label class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">De</label>
+                <input type="date" id="dtIni" class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-floridaOrange transition-all">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Até</label>
+                <input type="date" id="dtFim" class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-floridaOrange transition-all">
+            </div>
+            <button id="btnAplicar" class="bg-floridaOrange hover:bg-orange-600 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all">Aplicar</button>
+        </div>
+    </header>
+
+    <!-- 4 CARDS DE PROJEÇÃO -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <!-- Card 1: Dia - Faturamento -->
+        <div class="smooth-card glow-orange bg-cardBg border border-slate-800/80 rounded-2xl p-5">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Média do Dia • Faturamento</span>
+                <span id="c1Badge" class="text-[10px] font-bold bg-slate-700/40 text-slate-300 px-2 py-0.5 rounded">—</span>
+            </div>
+            <p id="c1Valor" class="text-2xl font-black text-white">—</p>
+            <p id="c1Brl" class="text-[11px] text-slate-400 mt-0.5">—</p>
+            <div class="mt-2 pt-2 border-t border-slate-800/60 text-[10px] text-slate-500"><span id="c1Meta">Meta diária: —</span></div>
+        </div>
+        <!-- Card 2: Dia - Volume -->
+        <div class="smooth-card glow-orange bg-cardBg border border-slate-800/80 rounded-2xl p-5">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Média do Dia • Volume</span>
+                <span id="c2Badge" class="text-[10px] font-bold bg-slate-700/40 text-slate-300 px-2 py-0.5 rounded">—</span>
+            </div>
+            <p class="text-2xl font-black text-white"><span id="c2Valor">—</span> <span class="text-xs font-normal text-slate-400">vouchers/dia</span></p>
+            <p id="c2Sub" class="text-[11px] text-slate-400 mt-0.5">Contratos confirmados por dia</p>
+            <div class="mt-2 pt-2 border-t border-slate-800/60 text-[10px] text-slate-500"><span id="c2Meta">Meta diária: —</span></div>
+        </div>
+        <!-- Card 3: Mês - Faturamento (run-rate) -->
+        <div class="smooth-card glow-blue bg-cardBg border border-slate-800/80 rounded-2xl p-5">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Projeção do Mês • Faturamento</span>
+                <span id="c3Badge" class="text-[10px] font-bold bg-slate-700/40 text-slate-300 px-2 py-0.5 rounded">—</span>
+            </div>
+            <p id="c3Valor" class="text-2xl font-black text-white">—</p>
+            <p id="c3Brl" class="text-[11px] text-slate-400 mt-0.5">—</p>
+            <div class="mt-2 pt-2 border-t border-slate-800/60 text-[10px] text-slate-500"><span id="c3Meta">Meta mensal: —</span></div>
+        </div>
+        <!-- Card 4: Mês - Volume (run-rate) -->
+        <div class="smooth-card glow-blue bg-cardBg border border-slate-800/80 rounded-2xl p-5">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Projeção do Mês • Volume</span>
+                <span id="c4Badge" class="text-[10px] font-bold bg-slate-700/40 text-slate-300 px-2 py-0.5 rounded">—</span>
+            </div>
+            <p class="text-2xl font-black text-white"><span id="c4Valor">—</span> <span class="text-xs font-normal text-slate-400">vouchers</span></p>
+            <p id="c4Sub" class="text-[11px] text-slate-400 mt-0.5">Tendência de contratos no mês</p>
+            <div class="mt-2 pt-2 border-t border-slate-800/60 text-[10px] text-slate-500"><span id="c4Meta">Meta mensal: —</span></div>
+        </div>
+    </div>
+
+    <!-- PACE -->
+    <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 mb-8 smooth-card hover:border-slate-700">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+            <div>
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-floridaBlue rounded-full animate-pulse"></span>
+                    Ritmo de Vendas Acumulado (Pace vs Meta)
+                </h3>
+                <p class="text-xs text-slate-400">Faturamento acumulado dia-a-dia (USD) contra a meta linear e a projeção de fechamento do mês.</p>
+            </div>
+        </div>
+        <div class="h-80"><canvas id="chartPace"></canvas></div>
+    </div>
+
+    <!-- FUNIL + (COMPARATIVO & LOST) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Funil -->
+        <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700 flex flex-col">
+            <div class="mb-2">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-6 bg-floridaOrange rounded-full"></span>
+                    Funil de Conversão Comercial (CRM)
+                </h3>
+                <p class="text-xs text-slate-400">Leads do funil Comercial (Kommo) por etapa, com passagem entre etapas. <span id="funilPeriodo" class="text-slate-500"></span></p>
+            </div>
+            <div id="funilBox" class="py-4 flex-1 flex flex-col justify-center space-y-4">
+                <p class="text-center text-slate-500 text-sm">Carregando…</p>
+            </div>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="space-y-6">
+            <!-- Comparativo -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+                <div class="flex justify-between items-start mb-1">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="w-2.5 h-6 bg-floridaBlue rounded-full"></span>
+                        Período Atual vs Anterior
+                    </h3>
+                    <span class="text-[10px] text-accentGreen font-bold bg-emerald-500/10 px-2 py-0.5 rounded">Faturamento & Volume</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-3">Mesmo tamanho de janela, imediatamente antes. <span class="text-slate-500">Ano passado (YoY) fica disponível em dez/2026, quando o Dunas completa 1 ano.</span></p>
+                <div class="h-44"><canvas id="chartComparativo"></canvas></div>
+            </div>
+
+            <!-- Lost Reasons -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-6 smooth-card hover:border-slate-700">
+                <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-accentRed rounded-full"></span>
+                    Vazamentos do Funil (Motivos de Perda)
+                </h3>
+                <p class="text-[11px] text-slate-400 mb-3">Leads perdidos por motivo, com valor potencial e tendência vs período anterior. <span id="lostPeriodo" class="text-slate-500"></span></p>
+                <div id="lostStats" class="grid grid-cols-3 gap-2 mb-4"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                    <div class="h-40"><canvas id="chartLost"></canvas></div>
+                    <div id="lostLista" class="space-y-1.5 text-xs"></div>
+                </div>
+                <p id="lostNota" class="text-[10px] text-slate-500 mt-3 pt-3 border-t border-slate-800/60"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <script>
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#1e293b';
+
+        const ctxPace = document.getElementById('chartPace').getContext('2d');
+        window.chartPace = new Chart(ctxPace, {
+            type: 'line',
+            data: { labels: [], datasets: [
+                { label: 'Realizado Acumulado', data: [], borderColor: '#0284c7', backgroundColor: 'rgba(2,132,199,0.06)', borderWidth: 3, pointRadius: 1, fill: true, tension: 0.2, spanGaps: false },
+                { label: 'Meta Acumulada', data: [], borderColor: '#475569', borderWidth: 2, borderDash: [6,4], pointRadius: 0, fill: false },
+                { label: 'Projeção de Fechamento', data: [], borderColor: '#f97316', borderWidth: 2, borderDash: [3,3], pointRadius: 0, fill: false, spanGaps: true }
+            ] },
+            options: { responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { boxWidth: 12 } },
+                    tooltip: { callbacks: { label: (c) => c.parsed.y == null ? null : ` ${c.dataset.label}: US$ ${Number(c.parsed.y).toLocaleString('pt-BR')}` } } },
+                scales: { y: { ticks: { callback: (v) => 'US$ ' + (v/1000).toLocaleString('pt-BR') + 'k' }, grid: { color: 'rgba(51,65,85,0.15)' } }, x: { grid: { display: false } } } }
+        });
+
+        const ctxComp = document.getElementById('chartComparativo').getContext('2d');
+        window.chartComparativo = new Chart(ctxComp, {
+            type: 'bar',
+            data: { labels: [], datasets: [
+                { label: 'Faturamento (US$ k)', data: [], backgroundColor: '#0284c7', borderRadius: 4, yAxisID: 'y' },
+                { label: 'Vouchers (un)', data: [], backgroundColor: '#f97316', borderRadius: 4, yAxisID: 'y1' }
+            ] },
+            options: { responsive: true, maintainAspectRatio: false,
+                scales: {
+                    y: { type: 'linear', position: 'left', ticks: { callback: (v) => 'US$ ' + v + 'k' }, grid: { color: 'rgba(51,65,85,0.15)' } },
+                    y1: { type: 'linear', position: 'right', ticks: { callback: (v) => v + ' un' }, grid: { drawOnChartArea: false } },
+                    x: { grid: { display: false } } },
+                plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } } }
+        });
+
+        const ctxLost = document.getElementById('chartLost').getContext('2d');
+        window.chartLost = new Chart(ctxLost, {
+            type: 'doughnut',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 3, borderColor: '#111b2d', hoverOffset: 8 }] },
+            options: { responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => { const t = c.dataset.data.reduce((a, b) => a + b, 0); return ` ${c.label}: ${Number(c.parsed).toLocaleString('pt-BR')} (${(100 * c.parsed / t).toFixed(1)}%)`; } } } }, cutout: '68%' }
+        });
+    <\/script>
+
+    <!-- DADOS REAIS -->
+    <script>
+        const EDGE_PAINEL = 'https://abjzskmxfcqsxcoybsdg.supabase.co/functions/v1/frc-painel-eficiencia';
+        const fmtInt = n => (n == null ? '—' : Number(n).toLocaleString('pt-BR'));
+        const fmtUSD = n => (n == null ? '—' : 'US$ ' + Math.round(Number(n)).toLocaleString('pt-BR'));
+        const fmtBRL = n => (n == null ? '—' : 'R$ ' + Math.round(Number(n)).toLocaleString('pt-BR'));
+        const fmtUSDk = n => { n = Number(n || 0); if (n >= 1e6) return 'US$ ' + (n / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi'; if (n >= 1e3) return 'US$ ' + Math.round(n / 1e3) + 'k'; return 'US$ ' + Math.round(n); };
+        const fmtPct = n => (n == null ? '—' : Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%');
+        const fmtPct0 = n => (n == null ? '—' : Math.round(Number(n)) + '%');
+        function isoHoje() { return new Date().toISOString().slice(0, 10); }
+        function isoPrimeiroDiaMes() { const d = new Date(); return d.toISOString().slice(0, 8) + '01'; }
+        function fmtDataBR(iso) { const [a, m, d] = iso.split('-'); return `${d}/${m}/${a}`; }
+        function badgeCls(pct) { return pct >= 95 ? 'text-accentGreen bg-emerald-500/10' : (pct >= 80 ? 'text-yellow-500 bg-yellow-500/10' : 'text-accentRed bg-red-500/10'); }
+        const CORES_FUNIL = ['from-sky-700 to-sky-600', 'from-sky-600 to-sky-500', 'from-orange-600 to-orange-500', 'from-emerald-600 to-emerald-500'];
+        const CORES_LOST = ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#14b8a6', '#475569'];
+
+        async function fetchMetric(metric) {
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            const r = await fetch(EDGE_PAINEL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ metric, data_inicio: di, data_fim: df }) });
+            const j = await r.json();
+            if (!j.ok) throw new Error(j.error || 'erro');
+            return j;
+        }
+
+        async function carregarForecast() {
+            try {
+                const j = await fetchMetric('forecast');
+                const r = j.resumo, dias = j.diario || [];
+                const dd = r.dias_decorridos || 1, dm = r.dias_no_mes || 30;
+                // Cards do dia
+                const mediaUsd = r.fat_usd / dd, mediaBrl = r.fat_brl / dd, mediaVch = r.vouchers / dd;
+                const metaDiaUsd = r.meta_usd / dm, metaDiaVch = r.meta_vouchers / dm;
+                const pctDiaFat = metaDiaUsd ? 100 * mediaUsd / metaDiaUsd : 0;
+                const pctDiaVol = metaDiaVch ? 100 * mediaVch / metaDiaVch : 0;
+                document.getElementById('c1Valor').textContent = fmtUSD(mediaUsd);
+                document.getElementById('c1Brl').textContent = fmtBRL(mediaBrl);
+                document.getElementById('c1Meta').textContent = 'Meta diária: ' + fmtUSD(metaDiaUsd);
+                setBadge('c1Badge', pctDiaFat);
+                document.getElementById('c2Valor').textContent = mediaVch.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+                document.getElementById('c2Meta').textContent = 'Meta diária: ' + metaDiaVch.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' vouchers';
+                setBadge('c2Badge', pctDiaVol);
+                // Cards do mês (run-rate)
+                const rrUsd = mediaUsd * dm, rrBrl = mediaBrl * dm, rrVch = mediaVch * dm;
+                const pctMesFat = r.meta_usd ? 100 * rrUsd / r.meta_usd : 0;
+                const pctMesVol = r.meta_vouchers ? 100 * rrVch / r.meta_vouchers : 0;
+                document.getElementById('c3Valor').textContent = fmtUSD(rrUsd);
+                document.getElementById('c3Brl').textContent = fmtBRL(rrBrl);
+                document.getElementById('c3Meta').textContent = 'Meta mensal: ' + fmtUSD(r.meta_usd);
+                setBadge('c3Badge', pctMesFat, true);
+                document.getElementById('c4Valor').textContent = Math.round(rrVch).toLocaleString('pt-BR');
+                document.getElementById('c4Meta').textContent = 'Meta mensal: ' + fmtInt(r.meta_vouchers) + ' vouchers';
+                setBadge('c4Badge', pctMesVol, true);
+                // Pace
+                const labels = Array.from({ length: dm }, (_, i) => String(i + 1));
+                const realiz = new Array(dm).fill(null);
+                let acc = 0;
+                dias.forEach(d => { const n = parseInt(d.dia.slice(8, 10)); acc += Number(d.fat_usd); if (n >= 1 && n <= dm) realiz[n - 1] = Math.round(acc); });
+                const metaLin = labels.map((_, i) => Math.round(r.meta_usd / dm * (i + 1)));
+                const proj = new Array(dm).fill(null);
+                if (dd >= 1 && dd < dm) { proj[dd - 1] = r.fat_usd; for (let i = dd; i < dm; i++) proj[i] = Math.round(r.fat_usd + mediaUsd * (i - (dd - 1))); }
+                window.chartPace.data.labels = labels;
+                window.chartPace.data.datasets[0].data = realiz;
+                window.chartPace.data.datasets[1].data = metaLin;
+                window.chartPace.data.datasets[2].data = proj;
+                window.chartPace.update();
+            } catch (e) { console.error('forecast', e); }
+        }
+        function setBadge(id, pct, mensal) {
+            const el = document.getElementById(id);
+            el.textContent = (mensal ? '' : '') + fmtPct0(pct) + ' da meta';
+            el.className = 'text-[10px] font-bold px-2 py-0.5 rounded ' + badgeCls(pct);
+        }
+
+        async function carregarFunil() {
+            const box = document.getElementById('funilBox');
+            const per = document.getElementById('funilPeriodo');
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            per.textContent = `${fmtDataBR(di)} → ${fmtDataBR(df)}`;
+            try {
+                const j = await fetchMetric('funil_comercial');
+                const rows = j.rows || [];
+                box.innerHTML = rows.map((x, i) => {
+                    const trans = x.pct_transicao == null ? '' : `↪ ${fmtPct(x.pct_transicao)}`;
+                    return `<div class="flex items-center gap-3">
+                        <div class="w-32 text-right text-xs font-bold text-slate-400 shrink-0">${i + 1}. ${x.etapa}</div>
+                        <div class="flex-1">
+                            <div style="width:${Math.max(24, x.pct_topo)}%" class="h-9 bg-gradient-to-r ${CORES_FUNIL[i] || CORES_FUNIL[3]} rounded-lg text-white flex items-center justify-between px-4 text-xs font-bold shadow-md min-w-max">
+                                <span>${fmtInt(x.leads)}</span><span class="pl-4">${fmtPct(x.pct_topo)}</span>
+                            </div>
+                        </div>
+                        <div class="w-16 text-[11px] font-black text-slate-400 shrink-0 text-right">${trans}</div>
+                    </div>`;
+                }).join('');
+            } catch (e) { box.innerHTML = `<p class="text-center text-accentRed text-sm">Erro: ${e.message}</p>`; }
+        }
+
+        async function carregarComparativo() {
+            try {
+                const j = await fetchMetric('forecast_comparativo');
+                const rows = j.rows || [];
+                window.chartComparativo.data.labels = rows.map(x => x.periodo);
+                window.chartComparativo.data.datasets[0].data = rows.map(x => Math.round(x.fat_usd / 1000));
+                window.chartComparativo.data.datasets[1].data = rows.map(x => x.vouchers);
+                window.chartComparativo.update();
+            } catch (e) { console.error('comparativo', e); }
+        }
+
+        async function carregarLost() {
+            const per = document.getElementById('lostPeriodo');
+            const stats = document.getElementById('lostStats');
+            const lista = document.getElementById('lostLista');
+            const nota = document.getElementById('lostNota');
+            const di = document.getElementById('dtIni').value, df = document.getElementById('dtFim').value;
+            per.textContent = `${fmtDataBR(di)} → ${fmtDataBR(df)}`;
+            try {
+                const j = await fetchMetric('lost_reasons');
+                const rows = j.rows || [], r = j.resumo || {};
+                // Stats do topo
+                const cobCls = r.cobertura_pct >= 60 ? 'text-accentGreen' : (r.cobertura_pct >= 40 ? 'text-yellow-500' : 'text-accentRed');
+                stats.innerHTML = `
+                    <div class="bg-slate-800/40 rounded-lg p-2 text-center"><p class="text-[9px] text-slate-500 uppercase tracking-wider">Leads perdidos</p><p class="text-lg font-black text-white">${fmtInt(r.total_perdidos)}</p></div>
+                    <div class="bg-slate-800/40 rounded-lg p-2 text-center"><p class="text-[9px] text-slate-500 uppercase tracking-wider">Com motivo</p><p class="text-lg font-black ${cobCls}">${fmtPct0(r.cobertura_pct)}</p></div>
+                    <div class="bg-slate-800/40 rounded-lg p-2 text-center"><p class="text-[9px] text-slate-500 uppercase tracking-wider">Valor em risco</p><p class="text-lg font-black text-accentRed">${fmtUSDk(r.valor_total_usd)}</p></div>`;
+                // Doughnut = só perdas REAIS (fora opt-out), por leads
+                const reais = rows.filter(x => x.bucket !== 'Não contatar (opt-out)');
+                window.chartLost.data.labels = reais.map(x => x.bucket);
+                window.chartLost.data.datasets[0].data = reais.map(x => x.leads);
+                window.chartLost.data.datasets[0].backgroundColor = reais.map((_, i) => CORES_LOST[i] || '#475569');
+                window.chartLost.update();
+                // Lista: TODOS os buckets com valor + tendência
+                lista.innerHTML = rows.map((x) => {
+                    const optOut = x.bucket === 'Não contatar (opt-out)';
+                    const idx = reais.findIndex(y => y.bucket === x.bucket);
+                    const cor = optOut ? '#64748b' : (CORES_LOST[idx] || '#475569');
+                    let trend;
+                    if (x.var_pct == null) trend = '<span class="text-slate-500">novo</span>';
+                    else if (x.var_pct > 0) trend = `<span class="text-accentRed">▲ ${x.var_pct > 999 ? '+999' : x.var_pct}%</span>`;
+                    else if (x.var_pct < 0) trend = `<span class="text-accentGreen">▼ ${Math.abs(x.var_pct)}%</span>`;
+                    else trend = '<span class="text-slate-500">=</span>';
+                    return `<div class="flex items-center justify-between gap-2 p-2 rounded-lg" style="background:${cor}14">
+                        <div class="min-w-0">
+                            <span class="font-bold block truncate" style="color:${cor}">${x.bucket}${optOut ? ' *' : ''}</span>
+                            <span class="text-[10px] text-slate-400">${fmtInt(x.leads)} leads · ${fmtUSDk(x.valor_usd)}</span>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="font-bold text-slate-200">${fmtPct(x.pct)}</span>
+                            <span class="block text-[10px]">${trend}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+                nota.innerHTML = `Cobertura: só <b class="text-slate-300">${fmtPct0(r.cobertura_pct)}</b> dos ${fmtInt(r.total_perdidos)} perdidos têm motivo tagueado — o resto vem vazio. <span class="text-slate-400">*</span> Opt-out = leads marcados "não enviar msg" (ação operacional, fora do gráfico). Valor ≈ leads × ticket médio (US$ ${fmtInt(r.ticket_usd)}).`;
+            } catch (e) { lista.innerHTML = `<p class="text-accentRed">Erro: ${e.message}</p>`; }
+        }
+
+        function atualizarPainel3() { carregarForecast(); carregarFunil(); carregarComparativo(); carregarLost(); }
+
+        (function initPainel3() {
+            document.getElementById('dtIni').value = isoPrimeiroDiaMes();
+            document.getElementById('dtFim').value = isoHoje();
+            document.getElementById('baseNota').textContent = '(faturamento = venda confirmada no Dunas, desde dez/2025)';
+            document.getElementById('btnAplicar').addEventListener('click', atualizarPainel3);
+            atualizarPainel3();
+        })();
+    <\/script>
+</body>
+</html>
+
+</script>
+<script>
+var loaded={};
+function unesc(s){return s.split('<\\/script').join('</script');}
+function fit(){var h=window.innerHeight-document.querySelector('.tabbar').offsetHeight;var fs=document.getElementsByTagName('iframe');for(var k=0;k<fs.length;k++){fs[k].style.height=h+'px';}}
+function load(i){if(loaded[i])return;document.getElementById('f'+i).srcdoc=unesc(document.getElementById('src'+i).textContent);loaded[i]=true;}
+function show(i){var ts=document.querySelectorAll('.tab');for(var k=0;k<ts.length;k++){ts[k].classList.toggle('active',parseInt(ts[k].dataset.i,10)===i);}for(var k=0;k<4;k++){document.getElementById('f'+k).classList.toggle('hidden',k!==i);}load(i);}
+(function(){var ts=document.querySelectorAll('.tab');for(var k=0;k<ts.length;k++){ts[k].addEventListener('click',function(){show(parseInt(this.dataset.i,10));});}window.addEventListener('resize',fit);fit();load(0);})();
+</script>
+</body>
+</html>
