@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedir Agora — FRC Marketing</title>
+<style>
+  :root { --vinho:#7D1202; --vermelho:#C90000; --navy:#212130; --off:#F4F4F4; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--off); color: var(--navy); }
+  header { background: var(--navy); color: white; padding: 24px 20px; }
+  header h1 { margin:0; font-size: 22px; }
+  header p { margin: 6px 0 0; opacity:.8; font-size: 14px; }
+  main { max-width: 560px; margin: 0 auto; padding: 24px 20px 80px; }
+  label { display:block; font-weight:600; margin: 18px 0 6px; font-size: 14px; }
+  textarea, select, input { width:100%; padding: 12px; border-radius:10px; border:1px solid #ccc; font-size:15px; font-family:inherit; }
+  textarea { min-height: 90px; resize: vertical; }
+  .row { display:flex; gap:12px; }
+  .row > div { flex:1; }
+  button.primary { margin-top:22px; width:100%; padding:14px; border:none; border-radius:12px; background: var(--vermelho); color:white; font-size:16px; font-weight:700; cursor:pointer; }
+  button.primary:disabled { opacity:.5; cursor:default; }
+  button.secondary { margin-top:12px; width:100%; padding:12px; border:2px solid var(--navy); border-radius:12px; background:white; color:var(--navy); font-size:15px; font-weight:600; cursor:pointer; }
+  #status { margin-top:16px; font-size:14px; color:#555; min-height: 20px; }
+  #preview { margin-top:20px; }
+  #preview img { width:100%; border-radius:14px; box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+  .badge { display:inline-block; background:var(--vinho); color:white; font-size:12px; padding:3px 10px; border-radius:20px; margin-bottom:8px; }
+  .hint { font-size:12px; color:#888; margin-top:4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📸 Pedir Agora</h1>
+  <p>Peça uma imagem de marketing pronta em ~20 segundos — marca, prazo e ela já sai no padrão FRC.</p>
+</header>
+<main>
+  <span class="badge">v1 — só imagem estática por enquanto</span>
+  <label>O que você precisa?</label>
+  <textarea id="headline" placeholder="Ex: promoção de fim de semana pra SUV em Orlando"></textarea>
+
+  <div class="row">
+    <div>
+      <label>Marca</label>
+      <select id="brand">
+        <option value="frc">Florida Rental Car</option>
+        <option value="plus">Florida Plus</option>
+        <option value="club">Florida Club</option>
+      </select>
+    </div>
+    <div>
+      <label>Prazo</label>
+      <select id="urgency">
+        <option value="hoje">Pra hoje</option>
+        <option value="semana">Essa semana</option>
+        <option value="sem_pressa" selected>Sem pressa</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Seu nome</label>
+  <input id="requester" placeholder="Quem está pedindo">
+
+  <button class="primary" id="submitBtn" onclick="submitRequest()">Gerar imagem</button>
+  <div id="status"></div>
+  <div id="preview"></div>
+</main>
+<script>
+  const ENDPOINT = 'https://abjzskmxfcqsxcoybsdg.supabase.co/functions/v1/marketing-quick-request';
+  let currentOutputId = null;
+
+  function getToken() {
+    let t = localStorage.getItem('frc_pedir_agora_token');
+    if (!t) {
+      t = prompt('Senha de acesso do painel (pergunte no grupo do time):');
+      if (t) localStorage.setItem('frc_pedir_agora_token', t.trim());
+    }
+    return (t || '').trim();
+  }
+
+  async function callApi(payload) {
+    const r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-quick-request-token': getToken() },
+      body: JSON.stringify(payload),
+    });
+    const j = await r.json();
+    if (r.status === 401) { localStorage.removeItem('frc_pedir_agora_token'); throw new Error('Senha errada — recarregue a página pra digitar de novo.'); }
+    return j;
+  }
+
+  async function submitRequest() {
+    const headline_hint = document.getElementById('headline').value.trim();
+    if (!headline_hint) { alert('Escreve o que você precisa primeiro.'); return; }
+    const brand = document.getElementById('brand').value;
+    const urgency = document.getElementById('urgency').value;
+    const requested_by = document.getElementById('requester').value.trim() || 'time_marketing';
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    document.getElementById('status').textContent = '⏳ Gerando... leva uns 15-20 segundos.';
+    document.getElementById('preview').innerHTML = '';
+
+    try {
+      const res = await callApi({ action: 'create', headline_hint, brand, urgency, requested_by });
+      btn.disabled = false;
+      if (!res.ok) {
+        document.getElementById('status').textContent = '❌ Deu erro: ' + (res.error || 'desconhecido') + '. Tenta de novo ou chama o Claude.';
+        return;
+      }
+      currentOutputId = res.output_id;
+      document.getElementById('status').textContent = '✅ Pronto!';
+      document.getElementById('preview').innerHTML = `
+        <img src="${res.preview_url}" alt="prévia">
+        <button class="secondary" onclick="sendToCanva()">Enviar pro Canva</button>
+        <div class="hint">Assim que enviar, uma sessão do Claude finaliza a montagem no Canva com nosso Brand Kit e avisa quando estiver lá (não é instantâneo).</div>
+      `;
+    } catch (e) {
+      btn.disabled = false;
+      document.getElementById('status').textContent = '❌ ' + e.message;
+    }
+  }
+
+  async function sendToCanva() {
+    if (!currentOutputId) return;
+    document.getElementById('status').textContent = '⏳ Enviando pro Canva...';
+    try {
+      const res = await callApi({ action: 'canva_handoff', output_id: currentOutputId });
+      document.getElementById('status').textContent = res.ok ? '📤 Na fila do Canva — avisamos quando estiver pronto.' : '❌ Erro ao enviar: ' + res.error;
+    } catch (e) {
+      document.getElementById('status').textContent = '❌ ' + e.message;
+    }
+  }
+</script>
+</body>
+</html>
